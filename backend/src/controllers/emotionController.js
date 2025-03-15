@@ -41,7 +41,7 @@ const getAllEmotions = async (req, res) => {
 // Get all uncompleted emotions (where reflection is missing)
 const getUncompletedEmotions = async (req, res) => {
     try {
-        const uncompletedEmotions = await Emotion.find({ 
+        const uncompletedEmotions = await Emotion.find({
             $or: [{ reflection: null }, { reflection: "" }] // Find missing or empty reflections
         });
         res.json(uncompletedEmotions);
@@ -69,4 +69,36 @@ const getEmotionsByType = async (req, res) => {
     }
 };
 
-module.exports = { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType };
+// Update reflection for a specific emotion record
+const updateReflection = async (req, res) => {
+    try {
+        let id = req.params.id; // Get record's unique ID from URL
+        const { reflection } = req.body; // Get the new reflection from request body
+        if (id.startsWith(':')) {
+            id = id.substring(1); // Remove the colon
+        }
+
+        // Ensure reflection is provided
+        if (!reflection) {
+            return res.status(400).json({ error: "Reflection field is required" });
+        }
+
+        // Find the record by ID and update the reflection field
+        const updatedEmotion = await Emotion.findByIdAndUpdate(
+            id,
+            { reflection: reflection },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedEmotion) {
+            return res.status(404).json({ error: "Emotion record not found" });
+        }
+
+        res.json({ message: "Reflection updated successfully", emotion: updatedEmotion });
+    } catch (error) {
+        console.error("❌ Error updating reflection:", error);
+        res.status(500).json({ error: "Failed to update reflection", details: error.message });
+    }
+};
+
+module.exports = { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection };
