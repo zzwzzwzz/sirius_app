@@ -23,7 +23,7 @@
             div.className = `px-6 py-4 text-lg font-bold ${randomColor} rounded-lg shadow-lg cursor-pointer text-center`;
             
             div.onclick = function() {
-                // alert(`You selected: ${text}`);
+                alert(`You selected: ${text}`);
                 const selectedEmotion = text;
     
                 fetch("/log", {
