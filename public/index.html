@@ -10,56 +10,51 @@
     <div class="max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center">
         <!-- Main Title -->
         <div class="text-center mb-12 animate-fade-in">
-            <h1 class="text-4xl font-bold text-blue-400 mb-4">What would you like to do today?</h1>
+            <h1 class="text-4xl font-bold text-white mb-4">What would you like to do today?</h1>
             <p class="text-gray-400">Choose your emotional wellness activity</p>
         </div>
 
         <!-- Action Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
-            <!-- Record Emotions Card -->
-            <a href="#" class="group">
-                <div class="bg-white rounded-xl shadow-lg p-6 h-full transform transition-all hover:scale-105 hover:shadow-xl">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-14 h-14 rounded-full bg-blue-400 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                            </svg>
+            <!-- Cards Loop -->
+            <script>
+                const activities = [
+                    { 
+                        title: "Record Your Emotions", 
+                        description: "Capture your current emotional state", 
+                        link: "#", 
+                        iconPath: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" 
+                    },
+                    { 
+                        title: "Write Your Reflection", 
+                        description: "Journal about your experiences", 
+                        link: "#", 
+                        iconPath: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" 
+                    },
+                    { 
+                        title: "Check Your History", 
+                        description: "Review past entries and patterns", 
+                        link: "#", 
+                        iconPath: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                    }
+                ];
+                
+                document.write(activities.map(activity => `
+                    <a href="${activity.link}" class="group">
+                        <div class="bg-white rounded-xl shadow-lg p-6 h-full transform transition-all hover:scale-105 hover:shadow-xl">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 rounded-full bg-blue-400 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${activity.iconPath}"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">${activity.title}</h3>
+                                <p class="text-sm text-gray-600">${activity.description}</p>
+                            </div>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Record Your Emotions</h3>
-                        <p class="text-sm text-gray-600">Capture your current emotional state</p>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Write Reflection Card -->
-            <a href="#" class="group">
-                <div class="bg-white rounded-xl shadow-lg p-6 h-full transform transition-all hover:scale-105 hover:shadow-xl">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-14 h-14 rounded-full bg-blue-400 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Write Your Reflection</h3>
-                        <p class="text-sm text-gray-600">Journal about your experiences</p>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Check History Card -->
-            <a href="#" class="group">
-                <div class="bg-white rounded-xl shadow-lg p-6 h-full transform transition-all hover:scale-105 hover:shadow-xl">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-14 h-14 rounded-full bg-blue-400 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Check Your History</h3>
-                        <p class="text-sm text-gray-600">Review past entries and patterns</p>
-                    </div>
-                </div>
-            </a>
+                    </a>
+                `).join(''));
+            </script>
         </div>
 
         <!-- Footer Note -->
