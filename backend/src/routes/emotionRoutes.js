@@ -1,5 +1,5 @@
 const express = require('express');
-const { logEmotion } = require("../controllers/emotionController");
+const { logEmotion, deleteAllEmotions } = require("../controllers/emotionController");
 
 const router = express.Router();
 
@@ -9,5 +9,7 @@ router.get('/data', (req, res) => {
 });
 
 router.post("/log", logEmotion); // Log an emotion
+
+router.delete("/deleteAll", deleteAllEmotions);
 
 module.exports = router;
