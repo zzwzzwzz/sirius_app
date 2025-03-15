@@ -14,7 +14,7 @@ const allowedEmotions = [
 const emotionSchema = new mongoose.Schema({
     emotion: { type: String, enum: allowedEmotions, required: true },
     triggerEvent: { type: String, required: true },
-    physicalReaction: { 
+    physicalReactions: { 
         type: [String], // An array of strings
         enum: allowedReactions, // Restrict values to predefined list
         required: true

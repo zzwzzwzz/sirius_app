@@ -5,10 +5,10 @@ const Emotion = require("../models/Emotion");
 // Log a new emotion to MongoDB
 const logEmotion = async (req, res) => {
     try {
-        const { emotion } = req.body;
+        const { emotion, triggerEvent, physicalReactions, reflection } = req.body;
 
         // Create and save the emotion to MongoDB
-        const newEmotion = new Emotion({ emotion });
+        const newEmotion = new Emotion({ emotion, triggerEvent, physicalReactions, reflection });
         await newEmotion.save();
 
         res.status(201).json({ message: "Emotion logged successfully", emotion: newEmotion });
