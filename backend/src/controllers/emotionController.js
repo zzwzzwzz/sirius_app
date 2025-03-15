@@ -51,4 +51,22 @@ const getUncompletedEmotions = async (req, res) => {
     }
 };
 
-module.exports = { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions };
+
+// Get all records with the same emotion
+const getEmotionsByType = async (req, res) => {
+    try {
+        const { emotion } = req.params; // Get the emotion from the URL
+        const matchingEmotions = await Emotion.find({ emotion: emotion }); // Find all records with this emotion
+
+        if (matchingEmotions.length === 0) {
+            return res.status(404).json({ message: "No records found for this emotion." });
+        }
+
+        res.json(matchingEmotions);
+    } catch (error) {
+        console.error("❌ Error fetching emotions by type:", error);
+        res.status(500).json({ error: "Failed to fetch emotions", details: error.message });
+    }
+};
+
+module.exports = { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType };

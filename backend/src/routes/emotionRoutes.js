@@ -1,5 +1,5 @@
 const express = require('express');
-const { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions } = require("../controllers/emotionController");
+const { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType } = require("../controllers/emotionController");
 
 const router = express.Router();
 
@@ -15,5 +15,7 @@ router.delete("/deleteAll", deleteAllEmotions); // delete all documents
 router.get("/all", getAllEmotions); // fetch all documents
 
 router.get("/uncompleted", getUncompletedEmotions); // fetch all documents without reflection
+
+router.get("/type/:emotion", getEmotionsByType); // fetch all past records under same emotion
 
 module.exports = router;
