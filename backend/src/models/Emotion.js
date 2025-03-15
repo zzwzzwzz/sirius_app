@@ -19,7 +19,7 @@ const emotionSchema = new mongoose.Schema({
         enum: allowedReactions, // Restrict values to predefined list
         required: true
     },
-    reflection: { type: String },
+    reflection: { type: String, default: null },
     timestamp: { type: Date, default: Date.now }
 });
 
