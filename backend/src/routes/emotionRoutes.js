@@ -1,5 +1,5 @@
 const express = require('express');
-const { logEmotion, deleteAllEmotions } = require("../controllers/emotionController");
+const { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions } = require("../controllers/emotionController");
 
 const router = express.Router();
 
@@ -10,6 +10,10 @@ router.get('/data', (req, res) => {
 
 router.post("/log", logEmotion); // Log an emotion
 
-router.delete("/deleteAll", deleteAllEmotions);
+router.delete("/deleteAll", deleteAllEmotions); // delete all documents
+
+router.get("/all", getAllEmotions); // fetch all documents
+
+router.get("/uncompleted", getUncompletedEmotions); // fetch all documents without reflection
 
 module.exports = router;

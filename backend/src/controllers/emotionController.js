@@ -27,4 +27,28 @@ const deleteAllEmotions = async (req, res) => {
     }
 };
 
-module.exports = { logEmotion, deleteAllEmotions };
+// Get all emotions
+const getAllEmotions = async (req, res) => {
+    try {
+        const emotions = await Emotion.find({}); // Fetch all documents
+        res.json(emotions);
+    } catch (error) {
+        console.error("❌ Error fetching emotions:", error);
+        res.status(500).json({ error: "Failed to fetch emotions", details: error.message });
+    }
+};
+
+// Get all uncompleted emotions (where reflection is missing)
+const getUncompletedEmotions = async (req, res) => {
+    try {
+        const uncompletedEmotions = await Emotion.find({ 
+            $or: [{ reflection: null }, { reflection: "" }] // Find missing or empty reflections
+        });
+        res.json(uncompletedEmotions);
+    } catch (error) {
+        console.error("❌ Error fetching uncompleted emotions:", error);
+        res.status(500).json({ error: "Failed to fetch uncompleted emotions", details: error.message });
+    }
+};
+
+module.exports = { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions };
