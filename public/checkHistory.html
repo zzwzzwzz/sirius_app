@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Datepicker Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker.min.css">
+</head>
+<body class="bg-gray-900 min-h-screen flex flex-col p-6">
+    <div class="max-w-7xl mx-auto w-full flex-grow flex flex-col">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Emotion History</h1>
+            <p class="text-gray-400">Review your emotional journey over time</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Date Range -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <input type="date" id="startDate" class="w-full p-2 border rounded-lg">
+                        <input type="date" id="endDate" class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Emotion Type</label>
+                    <select id="emotionFilter" class="w-full p-2 border rounded-lg">
+                        <option value="all">All Emotions</option>
+                        <option value="happy">Happy</option>
+                        <option value="stressed">Stressed</option>
+                        <option value="anxious">Anxious</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                    <input type="text" id="searchInput" placeholder="Search entries..." 
+                           class="w-full p-2 border rounded-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Entries List -->
+        <div class="bg-white rounded-xl shadow-lg p-6 flex-grow">
+            <div id="loading" class="text-center py-4">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto"></div>
+            </div>
+            
+            <div id="entriesContainer" class="space-y-4 hidden">
+                <!-- Entry Template -->
+                <div class="entry-template hidden">
+                    <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <div class="flex flex-nowrap justify-between items-start gap-4">
+                            <!-- Left Column -->
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-800 truncate" data-field="date">2025-01-25</h3>
+                                <p class="text-sm text-gray-600 truncate" data-field="emotion">
+                                    Emotion: <span class="text-blue-500">Stressed</span>
+                                </p>
+                            </div>
+                            
+                            <!-- Right Column -->
+                            <div class="flex items-center gap-2 ml-auto min-w-[120px] justify-end">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-sm whitespace-nowrap" 
+                                    data-field="intensity">7/10</span>
+                                <button class="text-gray-400 hover:text-blue-500 detail-btn flex-shrink-0">
+                                    <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Detailed View -->
+                        <div class="details mt-4 hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div class="space-y-1">
+                                    <p class="text-gray-600 truncate" data-field="trigger">Trigger: Work presentation</p>
+                                    <p class="text-gray-600 truncate" data-field="location">Location: Office</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-gray-600" data-field="physical">
+                                        Physical Reactions: 
+                                        <span class="text-blue-500">Racing heart, Sweating</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="mt-6 flex justify-center gap-2 hidden" id="pagination">
+                <button class="px-3 py-1 rounded-lg bg-gray-200 text-gray-700 pagination-btn">1</button>
+                <button class="px-3 py-1 rounded-lg bg-blue-100 text-blue-600 pagination-btn">2</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock API Data Example (Need to Replace with real API calls later)
+        const mockEntries = [
+            {
+                id: 1,
+                date: "2023-07-20",
+                emotion: "Stressed",
+                intensity: 7,
+                trigger: "Work presentation",
+                location: "Office",
+                physicalReactions: ["Racing heart", "Sweating"],
+                notes: "Felt overwhelmed during team meeting"
+            }
+        ];
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('entriesContainer').classList.remove('hidden');
+                loadEntries(mockEntries);
+            }, 1000);
+        });
+
+        function loadEntries(entries) {
+            const container = document.getElementById('entriesContainer');
+            const template = document.querySelector('.entry-template');
+            
+            entries.forEach(entry => {
+                const clone = template.cloneNode(true);
+                clone.classList.remove('hidden');
+                clone.classList.remove('entry-template');
+                
+                // Populate data
+                clone.querySelector('[data-field="date"]').textContent = entry.date;
+                clone.querySelector('[data-field="emotion"] span').textContent = entry.emotion;
+                clone.querySelector('[data-field="intensity"]').textContent = 
+                    `Intensity: ${entry.intensity}/10`;
+                clone.querySelector('[data-field="trigger"]').textContent = 
+                    `Trigger: ${entry.trigger}`;
+                clone.querySelector('[data-field="location"]').textContent = 
+                    `Location: ${entry.location}`;
+                clone.querySelector('[data-field="physical"] span').textContent = 
+                    entry.physicalReactions.join(', ');
+
+                // Add toggle functionality
+                clone.querySelector('.detail-btn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const details = clone.querySelector('.details');
+                    details.classList.toggle('hidden');
+                    clone.querySelector('svg').classList.toggle('rotate-180');
+                });
+
+                container.appendChild(clone);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ const emotionRoutes = require('./routes/emotionRoutes'); // Import emotion route
 
 const mongoose = require("mongoose");
 
+ 
 
 // check
 console.log("MONGO_URI:", process.env.MONGO_URI);
