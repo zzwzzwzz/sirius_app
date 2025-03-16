@@ -6,9 +6,9 @@ const allowedReactions = [
 ];
 
 const allowedEmotions = [
-    "happy",
-    "sad",
-    "jealous"
+    "Happy",
+    "Sad",
+    "Jealous"
 ];
 
 const emotionSchema = new mongoose.Schema({
