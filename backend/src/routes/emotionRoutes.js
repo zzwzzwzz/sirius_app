@@ -10,7 +10,7 @@ router.get('/data', (req, res) => {
 
 router.post("/log", logEmotion); // Log an emotion
 
-router.put("/updateTriAndPhy/:id", updateTriAndPhy); // update trigger event and physical reactions
+router.put("/updateTriAndPhy", updateTriAndPhy); // update trigger event and physical reactions
 
 router.delete("/deleteAll", deleteAllEmotions); // delete all documents
 

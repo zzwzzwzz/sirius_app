@@ -21,10 +21,9 @@ const logEmotion = async (req, res) => {
     }
 };
 
-// Update emotion with trigger and physicalReaction
+// Update latest record with trigger and physicalReaction
 const updateTriAndPhy = async (req, res) => {
     try {
-        let id = req.params.id; // Get record's unique ID from URL
         const { triggerEvent, physicalReactions } = req.body; // Get the new reflection from request body
 
         // Ensure triggerEvent is provided
@@ -37,21 +36,40 @@ const updateTriAndPhy = async (req, res) => {
             return res.status(400).json({ error: "Physical reactions field is required" });
         }
 
-        // Find the record by ID and update the fields
-        const updatedEmotion = await Emotion.findByIdAndUpdate(
-            id,
-            {
-                triggerEvent: triggerEvent,
-                physicalReactions: physicalReactions
-            },
-            { new: true } // Return the updated document
-        );
+        // Step 1: Find the latest (most recent) emotion record
+        const latestEmotion = await Emotion.findOne().sort({ timestamp: -1 }).exec();
 
-        if (!updatedEmotion) {
-            return res.status(404).json({ error: "Emotion record not found" });
+        if (!latestEmotion) {
+            console.log("❌ No emotion records found.");
+            return res.status(404).json({ message: "No emotion records found." });
         }
 
-        res.json({ message: "Details updated successfully", emotion: updatedEmotion });
+        console.log(`📝 Latest emotion found: ${latestEmotion.emotion}, updating reflection...`);
+
+        // Step 2: Update its reflection field
+        latestEmotion.triggerEvent = triggerEvent;
+        latestEmotion.physicalReactions = physicalReactions;
+        await latestEmotion.save();
+
+        console.log(`✅ Reflection updated successfully: ${latestEmotion.triggerEvent} and ${latestEmotion.physicalReactions}`);
+
+        res.json({ message: "Reflection updated successfully", updatedRecord: latestEmotion });
+
+        // // Find the record by ID and update the fields
+        // const updatedEmotion = await Emotion.findByIdAndUpdate(
+        //     id,
+        //     {
+        //         triggerEvent: triggerEvent,
+        //         physicalReactions: physicalReactions
+        //     },
+        //     { new: true } // Return the updated document
+        // );
+
+        // if (!updatedEmotion) {
+        //     return res.status(404).json({ error: "Emotion record not found" });
+        // }
+
+        // res.json({ message: "Details updated successfully", emotion: updatedEmotion });
     } catch (error) {
         console.error("❌ Error updating details:", error);
         res.status(500).json({ error: "Failed to update details", details: error.message });

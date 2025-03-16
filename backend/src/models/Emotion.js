@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
 
 const allowedReactions = [
-    "increased heart rate",
-    "shaking"
+    'Racing heart',
+    'Sweating',
+    'Shaking',
+    'Tight chest',
+    'Lump in throat',
+    'Hot/cold flashes',
+    'Fatigue',
+    'Nausea',
+    'Dizziness'
 ];
 
 const allowedEmotions = [
@@ -15,11 +22,10 @@ const allowedEmotions = [
 const emotionSchema = new mongoose.Schema({
     emotion: { type: String, enum: allowedEmotions, required: true },
     triggerEvent: { type: String, default: "" },
-    physicalReactions: {
-        type: [String], // An array of strings
-        enum: allowedReactions, // Restrict values to predefined list
-        default: []
-    },
+    physicalReactions: [{
+        reaction: { type: String, enum: allowedReactions, required: true }, // The reaction name
+        intensity: { type: Number, min: 0, max: 10, required: true } // Intensity level (0-10)
+    }],
     reflection: { type: String, default: null },
     timestamp: { type: Date, default: Date.now }
 });
