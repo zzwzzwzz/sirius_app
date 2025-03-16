@@ -1,5 +1,5 @@
 const express = require('express');
-const { logEmotion, updateTriAndPhy, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection } = require("../controllers/emotionController");
+const { logEmotion, updateTriAndPhy, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection, getGift } = require("../controllers/emotionController");
 
 const router = express.Router();
 
@@ -19,6 +19,8 @@ router.get("/all", getAllEmotions); // fetch all documents
 router.get("/uncompleted", getUncompletedEmotions); // fetch all documents without reflection
 
 router.get("/type/:emotion", getEmotionsByType); // fetch all past records under same emotion
+
+router.get("/unwrap/:emotion", getGift);
 
 router.put("/updateReflection/:id", updateReflection); // update reflection of a record with specific id
 
