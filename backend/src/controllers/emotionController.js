@@ -22,9 +22,6 @@ const updateTriAndPhy = async (req, res) => {
     try {
         let id = req.params.id; // Get record's unique ID from URL
         const { triggerEvent, physicalReactions } = req.body; // Get the new reflection from request body
-        if (id.startsWith(':')) {
-            id = id.substring(1); // Remove the colon
-        }
 
         // Ensure triggerEvent is provided
         if (!triggerEvent) {
@@ -109,14 +106,34 @@ const getEmotionsByType = async (req, res) => {
     }
 };
 
+// Get the newest reflection of the same emotion
+const getGift = async (req, res) => {
+    try {
+        const { emotion } = req.params; // Get the emotion from the URL
+
+        // Find the latest record with the given emotion and a non-empty reflection
+        const latestEmotion = await Emotion.findOne(
+            { emotion: emotion, reflection: { $exists: true, $ne: "" } } // Ensure reflection exists and is not empty
+        )
+        .sort({ timestamp: -1 }) // Sort by timestamp in descending order (newest first)
+        .exec();
+
+        if (!latestEmotion) {
+            return res.status(404).json({ message: "You haven't stored any reflections yet, but that's okay! 🌱 Every moment is a new chance to grow. Why not take a deep breath and write your first reflection today? 💙" });
+        }
+
+        res.json({ reflection: latestEmotion.reflection });
+    } catch (error) {
+        console.error("❌ Error fetching latest reflection by emotion:", error);
+        res.status(500).json({ error: "Failed to fetch latest reflection", details: error.message });
+    }
+}
+
 // Update reflection for a specific emotion record
 const updateReflection = async (req, res) => {
     try {
         let id = req.params.id; // Get record's unique ID from URL
         const { reflection } = req.body; // Get the new reflection from request body
-        if (id.startsWith(':')) {
-            id = id.substring(1); // Remove the colon
-        }
 
         // Ensure reflection is provided
         if (!reflection) {
@@ -141,4 +158,4 @@ const updateReflection = async (req, res) => {
     }
 };
 
-module.exports = { logEmotion, updateTriAndPhy, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection };
+module.exports = { logEmotion, updateTriAndPhy, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, getGift, updateReflection };
