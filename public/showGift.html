@@ -20,7 +20,7 @@
             <div class="w-full flex justify-center">
                 <div class="box">
                     <div class="box-body">
-                        <span class="comment block mb-4">This block will show the comments you leave for yourself</span>
+                        <span id="commentText" class="comment block mb-4">Loading your message...</span>
                         <div class="box-lid">
                             <div class="box-bowtie"></div>
                         </div>
@@ -38,5 +38,38 @@
           </a>
       </div>
     </div>
+
+    <script defer>
+        console.log("Javascript is runnning!!!!");
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve the selected emotion from Local Storage
+            const selectedEmotion = localStorage.getItem("selectedEmotion");
+
+            // Reference to the comment text block
+            const commentTextElement = document.getElementById("commentText");
+
+            if (!selectedEmotion) {
+                commentTextElement.innerText = "No emotion selected.";
+                return;
+            }
+
+            console.log(`📩 Fetching message for emotion: ${selectedEmotion}`);
+
+            // Fetch the latest message for this emotion
+            fetch(`http://localhost:5000/api/emotions/unwrap/${selectedEmotion}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.reflection) {
+                        commentTextElement.innerText = `💡 "${data.reflection}"`;
+                    } else {
+                        commentTextElement.innerText = `💙 No stored reflections yet for "${selectedEmotion}". Keep exploring!`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching message:", error);
+                    commentTextElement.innerText = "❌ Failed to load message.";
+                });
+        });
+    </script>
 </body>
 </html>

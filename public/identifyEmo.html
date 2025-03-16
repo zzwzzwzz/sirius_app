@@ -47,6 +47,10 @@
 
         // function to send emotion to teh backend
         function logEmotion(selectedEmotion) {
+
+          // Store the selected emotion in Local Storage
+          localStorage.setItem("selectedEmotion", selectedEmotion);
+
           fetch("http://localhost:5000/api/emotions/log", {
             method: "POST",
             headers: {

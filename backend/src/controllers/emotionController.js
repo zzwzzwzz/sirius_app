@@ -115,16 +115,37 @@ const getGift = async (req, res) => {
     try {
         const { emotion } = req.params; // Get the emotion from the URL
 
-        // Find the latest record with the given emotion and a non-empty reflection
-        const latestEmotion = await Emotion.findOne(
-            { emotion: emotion, reflection: { $exists: true, $ne: "" } } // Ensure reflection exists and is not empty
-        )
-            .sort({ timestamp: -1 }) // Sort by timestamp in descending order (newest first)
+        console.log(`Looking for reflections with emotion: '${emotion}'`);
+
+        // Debug: Check what emotions exist in the database
+        const allEmotions = await Emotion.distinct('emotion');
+        console.log('All emotions in database:', allEmotions);
+
+
+        // // debug findOne
+        // const emotionsWithRef = await Emotion.findOne(
+        //     { emotion: emotion, reflection: { $exists: true, $ne: "" } }
+        // )
+        //     .sort({ timestamp: -1})
+        //     .exec();
+        // console.log("what i found:" + emotionsWithRef);
+
+        // // Find the latest record with the given emotion and a non-empty reflection
+        // const latestEmotion = await Emotion.findOne(
+        //     { emotion: emotion, reflection: { $exists: true, $ne: "" } } // Ensure reflection exists and is not empty
+        // )
+        //     .sort({ timestamp: -1 }) // Sort by timestamp in descending order (newest first)
+        //     .exec();
+
+        const matchingEmotions = await Emotion.find({ emotion: emotion })
+            .sort({ timestamp: -1 }) // Sort by newest first
             .exec();
+        const latestEmotion = matchingEmotions.find(e => e.reflection && e.reflection.trim() !== "");
 
         if (!latestEmotion) {
             return res.status(404).json({ message: "You haven't stored any reflections yet, but that's okay! 🌱 Every moment is a new chance to grow. Why not take a deep breath and write your first reflection today? 💙" });
         }
+        console.log("gift found: " + latestEmotion);
 
         res.json({ reflection: latestEmotion.reflection });
     } catch (error) {
