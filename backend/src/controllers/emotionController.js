@@ -4,12 +4,16 @@ const Emotion = require("../models/Emotion");
 
 // Log a new emotion to MongoDB only with emotion input
 const logEmotion = async (req, res) => {
+    //console.log("Incoming request body:", req.body); // Debugging line
     try {
         const { emotion } = req.body;
+        //console.log("Extracted emotion:", emotion); // Log the extracted emotion
 
         // Create and save the emotion to MongoDB
         const newEmotion = new Emotion({ emotion });
+        //console.log("Extracted emotion:", emotion); // Log the extracted emotion
         await newEmotion.save();
+        //console.log("Extracted emotion:", emotion); // Log the extracted emotion
 
         res.status(201).json({ message: "Emotion logged successfully", emotion: newEmotion });
     } catch (error) {
@@ -115,8 +119,8 @@ const getGift = async (req, res) => {
         const latestEmotion = await Emotion.findOne(
             { emotion: emotion, reflection: { $exists: true, $ne: "" } } // Ensure reflection exists and is not empty
         )
-        .sort({ timestamp: -1 }) // Sort by timestamp in descending order (newest first)
-        .exec();
+            .sort({ timestamp: -1 }) // Sort by timestamp in descending order (newest first)
+            .exec();
 
         if (!latestEmotion) {
             return res.status(404).json({ message: "You haven't stored any reflections yet, but that's okay! 🌱 Every moment is a new chance to grow. Why not take a deep breath and write your first reflection today? 💙" });
