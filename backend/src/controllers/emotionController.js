@@ -2,18 +2,58 @@ let emotions = []; // Temporary in-memory storage (replace with DB later)
 
 const Emotion = require("../models/Emotion");
 
-// Log a new emotion to MongoDB
+// Log a new emotion to MongoDB only with emotion input
 const logEmotion = async (req, res) => {
     try {
-        const { emotion, triggerEvent, physicalReactions, reflection } = req.body;
+        const { emotion } = req.body;
 
         // Create and save the emotion to MongoDB
-        const newEmotion = new Emotion({ emotion, triggerEvent, physicalReactions, reflection });
+        const newEmotion = new Emotion({ emotion });
         await newEmotion.save();
 
         res.status(201).json({ message: "Emotion logged successfully", emotion: newEmotion });
     } catch (error) {
         res.status(500).json({ error: "Failed to log emotion", details: error.message });
+    }
+};
+
+// Update emotion with trigger and physicalReaction
+const updateTriAndPhy = async (req, res) => {
+    try {
+        let id = req.params.id; // Get record's unique ID from URL
+        const { triggerEvent, physicalReactions } = req.body; // Get the new reflection from request body
+        if (id.startsWith(':')) {
+            id = id.substring(1); // Remove the colon
+        }
+
+        // Ensure triggerEvent is provided
+        if (!triggerEvent) {
+            return res.status(400).json({ error: "Trigger event field is required" });
+        }
+
+        // Ensure physical reactions is provided
+        if (!physicalReactions) {
+            return res.status(400).json({ error: "Physical reactions field is required" });
+        }
+
+        // Find the record by ID and update the fields
+        const updatedEmotion = await Emotion.findByIdAndUpdate(
+            id,
+            {
+                triggerEvent: triggerEvent,
+                physicalReactions: physicalReactions
+            },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedEmotion) {
+            return res.status(404).json({ error: "Emotion record not found" });
+        }
+
+        res.json({ message: "Details updated successfully", emotion: updatedEmotion });
+    } catch (error) {
+        console.error("❌ Error updating details:", error);
+        res.status(500).json({ error: "Failed to update details", details: error.message });
     }
 };
 
@@ -101,4 +141,4 @@ const updateReflection = async (req, res) => {
     }
 };
 
-module.exports = { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection };
+module.exports = { logEmotion, updateTriAndPhy, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection };

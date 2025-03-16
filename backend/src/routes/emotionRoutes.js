@@ -1,5 +1,5 @@
 const express = require('express');
-const { logEmotion, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection } = require("../controllers/emotionController");
+const { logEmotion, updateTriAndPhy, deleteAllEmotions, getAllEmotions, getUncompletedEmotions, getEmotionsByType, updateReflection } = require("../controllers/emotionController");
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ router.get('/data', (req, res) => {
 });
 
 router.post("/log", logEmotion); // Log an emotion
+
+router.put("/updateTriAndPhy/:id", updateTriAndPhy); // update trigger event and physical reactions
 
 router.delete("/deleteAll", deleteAllEmotions); // delete all documents
 
