@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 
 // check
 console.log("MONGO_URI:", process.env.MONGO_URI);
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = "mongodb+srv://caseyyoufromearth:dbUserPassword@cluster0.cnrmq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Initialize the app
 const app = express();
