@@ -19,6 +19,7 @@
         </p>
         
         <textarea 
+            id="reflectionInput"
             class="w-full h-40 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="Type your reflection here..."></textarea>
         
@@ -27,11 +28,47 @@
             class="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors shadow-lg">
                 ← Back
             </a>
-            <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button id="saveReflectionBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Save
             </button>
         </div>
+
+        <!-- Success/Error Message -->
+        <p id="statusMessage" class="text-center mt-4 text-lg"></p>
     </div>
+
+    <script>
+        document.getElementById("saveReflectionBtn").addEventListener("click", async function () {
+            const reflection = document.getElementById("reflectionInput").value.trim();
+            
+            if (!reflection) {
+                document.getElementById("statusMessage").innerText = "⚠ Please enter a reflection before saving.";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5000/api/emotions/updateReflection", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ reflection }) // Send data to backend
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("statusMessage").innerText = "✅ Reflection saved successfully!";
+                    console.log("✅ Server Response:", data);
+                    // Clear input field
+                    document.getElementById("reflectionInput").value = "";
+                } else {
+                    document.getElementById("statusMessage").innerText = `❌ ${data.message || "Failed to save reflection"}`;
+                }
+            } catch (error) {
+                console.error("❌ Error:", error);
+                document.getElementById("statusMessage").innerText = "❌ Failed to connect to the server.";
+            }
+        });
+    </script>
     
 </body>
 </html>

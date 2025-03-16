@@ -154,10 +154,9 @@ const getGift = async (req, res) => {
     }
 }
 
-// Update reflection for a specific emotion record
+// Update reflection for latest record
 const updateReflection = async (req, res) => {
     try {
-        let id = req.params.id; // Get record's unique ID from URL
         const { reflection } = req.body; // Get the new reflection from request body
 
         // Ensure reflection is provided
@@ -165,18 +164,23 @@ const updateReflection = async (req, res) => {
             return res.status(400).json({ error: "Reflection field is required" });
         }
 
-        // Find the record by ID and update the reflection field
-        const updatedEmotion = await Emotion.findByIdAndUpdate(
-            id,
-            { reflection: reflection },
-            { new: true } // Return the updated document
-        );
+         // Step 1: Find the latest (most recent) emotion record
+         const latestEmotion = await Emotion.findOne().sort({ timestamp: -1 }).exec();
 
-        if (!updatedEmotion) {
-            return res.status(404).json({ error: "Emotion record not found" });
-        }
-
-        res.json({ message: "Reflection updated successfully", emotion: updatedEmotion });
+         if (!latestEmotion) {
+             console.log("❌ No emotion records found.");
+             return res.status(404).json({ message: "No emotion records found." });
+         }
+ 
+         console.log(`📝 Latest emotion found: ${latestEmotion.emotion}, updating reflection...`);
+ 
+         // Step 2: Update its reflection field
+         latestEmotion.reflection = reflection;
+         await latestEmotion.save();
+ 
+         console.log(`✅ Reflection updated successfully: ${latestEmotion.reflection}`);
+ 
+         res.json({ message: "Reflection updated successfully", updatedRecord: latestEmotion });
     } catch (error) {
         console.error("❌ Error updating reflection:", error);
         res.status(500).json({ error: "Failed to update reflection", details: error.message });

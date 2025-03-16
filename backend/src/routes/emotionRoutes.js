@@ -22,6 +22,6 @@ router.get("/type/:emotion", getEmotionsByType); // fetch all past records under
 
 router.get("/unwrap/:emotion", getGift);
 
-router.put("/updateReflection/:id", updateReflection); // update reflection of a record with specific id
+router.put("/updateReflection", updateReflection); // update reflection of a record with specific id
 
 module.exports = router;
