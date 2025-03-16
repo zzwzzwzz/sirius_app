@@ -103,6 +103,10 @@
                                         <span class="text-blue-500">Racing heart, Sweating</span>
                                     </p>
                                 </div>
+                                <div class="mt-2">
+                                    <p class="text-gray-600 font-semibold">Reflection:</p>
+                                    <p class="text-gray-700" data-field="reflection">No reflection provided.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,34 +146,48 @@
         ];
         
         document.addEventListener('DOMContentLoaded', async () => {
-            // Simulate API call
-            setTimeout(() => {
+            try {
+                // Show loading animation
+                document.getElementById('loading').classList.remove('hidden');
+
+                // Fetch data from backend
+                const response = await fetch("http://localhost:5000/api/emotions/all");
+                const entries = await response.json();
+
+                // Hide loading animation
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('entriesContainer').classList.remove('hidden');
-                loadEntries(mockEntries);
-            }, 1000);
+
+                // Populate UI
+                loadEntries(entries);
+            } catch (error) {
+                console.error("❌ Error fetching data:", error);
+                document.getElementById('loading').textContent = "Failed to load data.";
+            }
         });
 
         function loadEntries(entries) {
             const container = document.getElementById('entriesContainer');
             const template = document.querySelector('.entry-template');
             
+            // Clear previous entries
+            container.innerHTML = "";
+
             entries.forEach(entry => {
                 const clone = template.cloneNode(true);
                 clone.classList.remove('hidden');
                 clone.classList.remove('entry-template');
                 
                 // Populate data
-                clone.querySelector('[data-field="date"]').textContent = entry.date;
+                clone.querySelector('[data-field="date"]').textContent = entry.timestamp;
                 clone.querySelector('[data-field="emotion"] span').textContent = entry.emotion;
                 clone.querySelector('[data-field="intensity"]').textContent = 
                     `Intensity: ${entry.intensity}/10`;
                 clone.querySelector('[data-field="trigger"]').textContent = 
-                    `Trigger: ${entry.trigger}`;
-                clone.querySelector('[data-field="location"]').textContent = 
-                    `Location: ${entry.location}`;
+                    `Trigger: ${entry.triggerEvent}`;
                 clone.querySelector('[data-field="physical"] span').textContent = 
-                    entry.physicalReactions.join(', ');
+                    entry.physicalReactions?.join(', ') || "None";
+                clone.querySelector('[data-field="reflection"]').textContent = entry.reflection || "No reflection provided.";
 
                 // Add toggle functionality
                 clone.querySelector('.detail-btn').addEventListener('click', (e) => {
