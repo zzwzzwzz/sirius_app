@@ -6,15 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sirius</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="emotionBlock.css">
-
 </head>
 
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center">
+  <!-- Logo Header -->
+  <header class="max-w-6xl w-full mx-auto mb-4">
+    <div class="flex items-center">
+      <a href="index.html" class="inline-block hover:scale-105 transition-transform focus:outline-none rounded-lg">
+        <img src="MindCapsule_Logo.png" alt="MindCapsule Logo"
+          class="h-12 md:h-16 object-contain hover:opacity-90 transition-opacity">
+      </a>
+    </div>
+  </header>
+
   <!-- Main Content Container -->
   <div class="flex-grow flex flex-col items-center justify-center w-full max-w-4xl px-4">
     <!-- Title Section Matching Guiding Question Style -->
-    <div class="text-center mb-12 pt-8 w-full">
+    <div class="text-center mb-12 pt-4 w-full">
       <h1 class="text-4xl font-bold text-white mb-3">Identify Your Emotion</h1>
       <p class="text-gray-400">Select how you're feeling from the options below</p>
     </div>
@@ -35,7 +43,7 @@
           let randomColor = colors[Math.floor(Math.random() * colors.length)];
           div.textContent = text;
           div.className = `p-4 text-center font-bold ${randomColor} rounded-lg shadow-lg cursor-pointer 
-                              hover:scale-105 transition-transform duration-200 break-words`;
+                                hover:scale-105 transition-transform duration-200 break-words`;
 
           div.onclick = function () {
             // alert(`You selected: ${text}`);
@@ -81,7 +89,7 @@
   <div class="w-full max-w-4xl p-6 sticky bottom-0 bg-gray-900">
     <div class="flex flex-col md:flex-row gap-4 justify-center">
       <a href="showGift.html" class="w-48 mx-auto px-6 py-3 bg-yellow-400 text-white rounded-xl hover:bg-purple-700 
-                  transition-colors shadow-lg text-center">
+                    transition-colors shadow-lg text-center">
         🎁 Show Gift
       </a>
       <!-- Go Back Button -->
@@ -91,11 +99,10 @@
       </a>
 
       <a href="guidingQuestion.html" class="w-48 mx-auto px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 
-                  transition-colors shadow-lg text-center">
+                    transition-colors shadow-lg text-center">
         Next →
       </a>
     </div>
-    >>>>>>> origin/front-end
   </div>
 </body>
 
